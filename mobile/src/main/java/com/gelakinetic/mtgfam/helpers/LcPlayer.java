@@ -1,6 +1,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
@@ -154,6 +155,15 @@ public class LcPlayer {
      * @param delta How much the current value should be changed
      */
     public void changeValue(int delta, boolean immediate) {
+        changeValue(delta, immediate, false);
+    }
+    /**
+     * Convenience method to change the currently displayed value, either poison or life, and start the handler to
+     * commit the value to history
+     *
+     * @param delta How much the current value should be changed
+     */
+    public void changeValue(int delta, boolean immediate, boolean isOloro) {
         switch (mMode) {
             case LifeCounterFragment.STAT_POISON:
                 mPoison += delta;
@@ -180,6 +190,7 @@ public class LcPlayer {
         if (!mCommitting) {
             /* Create a new historyEntry */
             HistoryEntry entry = new HistoryEntry();
+            entry.mIsOloro = isOloro;
             /* If there are no entries, assume life is mDefaultLifeTotal */
             if (mLifeHistory.size() == 0) {
                 entry.mDelta = mLife - mDefaultLifeTotal;
@@ -355,6 +366,16 @@ public class LcPlayer {
             @Override
             public void onClick(View view) {
                 changeValue(5, false);
+            }
+        });
+        final MediaPlayer mediaPlayer = MediaPlayer.create(mFragment.getActivity(), R.raw.wololo);
+
+        mView.findViewById(R.id.player_plusOloro).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaPlayer.start();
+                changeValue(2, true);
+
             }
         });
 
@@ -560,6 +581,7 @@ public class LcPlayer {
     public static class HistoryEntry {
         public int mDelta;
         public int mAbsolute;
+        public boolean mIsOloro;
     }
 
     /**
@@ -620,7 +642,13 @@ public class LcPlayer {
                 case LifeCounterFragment.STAT_LIFE:
                     ((TextView) view.findViewById(R.id.absolute)).setText(mLifeHistory.get(position).mAbsolute + "");
                     if (mLifeHistory.get(position).mDelta > 0) {
-                        ((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
+
+                        if(mLifeHistory.get(position).mIsOloro){
+                            ((TextView) view.findViewById(R.id.relative)).setText("Oloro!");
+                        }
+                        else {
+                            ((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
+                        }
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
                                 mFragment.getActivity().getResources().getColor(
                                         R.color.material_green_500)
