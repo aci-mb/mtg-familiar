@@ -374,8 +374,7 @@ public class LcPlayer {
             @Override
             public void onClick(View view) {
                 mediaPlayer.start();
-                changeValue(2, true);
-
+                changeValue(2, true, true);
             }
         });
 

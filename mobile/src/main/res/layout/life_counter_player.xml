@@ -136,7 +136,11 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_weight="1"
                 android:text="OLORO!"
                 android:textStyle="bold"
-                android:layout_height="48dp" />
+                android:layout_height="48dp"
+                android:drawableStart="@drawable/wololo"
+                android:drawableLeft="@drawable/wololo"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:gravity="left|center_vertical"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
